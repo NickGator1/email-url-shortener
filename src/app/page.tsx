@@ -6,10 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { XIcon } from 'lucide-react';
+import { toast } from "sonner"
+import { Toaster } from "@/components/ui/sonner"
 
 import FileUpload from '@/components/home/FileUpload';
 import DownloadComponent from '@/components/home/DownloadComponent';
 import CopyComponent from '@/components/home/CopyComponent';
+
+import { extractLinksFromHtml, replaceLinksWithShortUrls } from '@/lib/htmlUtils';
 
 const Home = () => {
 
@@ -33,23 +37,41 @@ const Home = () => {
 
   const handleClearFile = () => {
     setHtml("");
+    setRevisedHtml("");
     setFilename("");
   }
 
-  const handleShortenLinks = () => {
-    // Call the backend route to create the shortened URLs
+  const handleShortenLinks = async () => {
     setIsLoading(true);
-    setRevisedHtml(html);
+
+    // Extract the links from the HTML first
+    const links = extractLinksFromHtml(html);
+
+    // Call the backend route to create the shortened URLs
+    const response = await fetch("/api/shorten", {
+      method: "POST",
+      body: JSON.stringify({ urls: links }),
+    });
+    const data = await response.json();
+
+    const shortUrls = data;
+    console.log(shortUrls);
+
+    // Replace the links in the HTML with the short URLs
+    const revisedHtml = replaceLinksWithShortUrls(html, shortUrls);
+    setRevisedHtml(revisedHtml);
+    toast.success("URLs successfully shortened! You can now download or copy the revised HTML.");
     setIsLoading(false);
   }
 
 
   return (
     <div className="flex min-h-screen items-center justify-center font-sans">
+      <Toaster />
       <main className="flex min-h-screen w-full max-w-2xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
 
         <Card className="w-full">
-          
+
           <CardHeader>
             <CardTitle>Shorten HTML</CardTitle>
             <CardDescription>

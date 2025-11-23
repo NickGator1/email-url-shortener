@@ -16,11 +16,20 @@ export async function POST(req: Request) {
   const shortCodes = urls.map(() => generateRandomString());
 
   // Verify the short codes don't already exist in the database
-  // If any do, generate a new short code
-  const existingShortCodes = await redis.mget(shortCodes.map((code: string) => `${code}`));
-  for (let i = 0; i < shortCodes.length; i++) {
-    if (existingShortCodes[i]) {
-      shortCodes[i] = generateRandomString();
+  // Keep regenerating and checking until all codes are unique
+  let hasCollisions = true;
+  while (hasCollisions) {
+    // Batch check all codes at once
+    const existingShortCodes = await redis.mget(shortCodes.map((code: string) => `${code}`));
+    
+    hasCollisions = false;
+    
+    // Regenerate codes that exist in Redis
+    for (let i = 0; i < shortCodes.length; i++) {
+      if (existingShortCodes[i]) {
+        shortCodes[i] = generateRandomString();
+        hasCollisions = true;
+      }
     }
   }
 

@@ -9,6 +9,7 @@
 
 ### Database
 Redis hosted on Upstash to store the key-value pairs
+
 **Reasons:**
 - Ultra low-latency lookup
 - All that is stored is a key-value pair, so no need for a relational database

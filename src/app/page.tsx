@@ -55,7 +55,6 @@ const Home = () => {
     const data = await response.json();
 
     const shortUrls = data;
-    console.log(shortUrls);
 
     // Replace the links in the HTML with the short URLs
     const revisedHtml = replaceLinksWithShortUrls(html, shortUrls);

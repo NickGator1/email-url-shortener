@@ -112,7 +112,7 @@ const Home = () => {
 
               {/* Download and copy buttons to download the revised HTML */}
               {revisedHtml &&
-                <div className="flex flex-row gap-4 items-center justify-center">
+                <div className="flex flex-row gap-4 items-center justify-center px-2">
                   <DownloadComponent html={revisedHtml} filename={filename} />
                   <CopyComponent html={revisedHtml} />
                 </div>

@@ -28,6 +28,8 @@ Redis hosted on Upstash to store the key-value pairs
     - This limits the size of data transfer between front end and back end, reducing memory usage on the server
     - Assumed that we're never storing any HTML in a database (could still make an API call to store it if desired)
 - URL parsing assumes all links are in href tags, and they are valid full URLs. Relative links wouldn't work, but we'd need the base URL for that to work anyway
+- Shadcn UI component library for nice, clean design
+- react-dropzone to handle file upload with drag and drop functionality
 
 ### Back end responsibilities
 - Generate codes, and upload to the Redis database
